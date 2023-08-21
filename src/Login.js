@@ -2,9 +2,35 @@ import React from "react";
 import "./Projects.css"
 import tate from "./portfolio/video-bg.mp4";
 import { useNavigate } from "react-router-dom";
+import google from "./portfolio/google-icon.svg"
+import apple from "./portfolio/apple.svg"
+import { auth } from "./fb";
+import "firebase/compat/auth";
+import {signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 const Login = () => {
 
   const navigate = useNavigate();
+  const handleSignin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      navigate("/intro");
+    } catch (error) {
+      console.log("Error signing in with Google:", error);
+    }
+  };
+  
+  const handleSignIn = () => {
+    
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+
+    console.log("Data stored in local storage:", email, password);
+    navigate("/intro");
+  };
   return (
     <>
       <div className="SignIn1">
@@ -18,12 +44,12 @@ const Login = () => {
           </div>
 
           <div className="google">
-            <button >
-              {/* <img src={google} alt="Google Logo" /> */}
+            <button onClick={handleSignin}>
+              <img src={google} alt="Google Logo" />
               <span>Sign in with Google</span>
             </button>
             <button>
-              {/* <img src={apple} alt="Apple Logo" /> */}
+              <img src={apple} alt="Apple Logo" />
               <span>Sign in with Apple</span>
             </button>
           </div>
@@ -58,9 +84,10 @@ const Login = () => {
             </div>
 
             <div className="email">
-            <button onClick={() => navigate("/intro")}>Sign In</button>
+              <button onClick={handleSignIn} >Sign In</button>
             </div>
           </div>
+
 
           <div className="dont">
             <span>Don’t have an account? </span>
